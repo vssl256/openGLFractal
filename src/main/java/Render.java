@@ -22,9 +22,9 @@ public class Render {
         System.out.println( "Setting width to " + win.width );
         shader.set( "width", win.width );
         shader.set( "height", win.height );
-        shader.set( "scale", 1d );
-        shader.set( "offsetX", 0d );
-        shader.set( "offsetY", 0d );
+        shader.set( "scale", 1f );
+        shader.set( "offsetX", 0f );
+        shader.set( "offsetY", 0f );
     }
 
     public void render() {

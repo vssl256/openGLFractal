@@ -27,7 +27,7 @@ public class Engine {
 
             win.swapBuffers();
 
-            win.setTitle( time.getFps() + " FPS" );
+            win.setTitle( scale + " Scale; " + time.getFps() + " FPS"  );
 
             time.end();
         }
@@ -35,10 +35,10 @@ public class Engine {
     }
 
 
-    private double scale = 1d;
-    private double offsetX = 0d, offsetY = 0d;
-    private double prevOffsetX = offsetX, prevOffsetY = offsetY;
-    private double prevScale = scale;
+    private float scale = 1f;
+    private float offsetX = 0f, offsetY = 0f;
+    private float prevOffsetX = offsetX, prevOffsetY = offsetY;
+    private float prevScale = scale;
     private boolean playback = true;
     private void controlsHandler() {
         //if ( playback ) shader.set1f( "time", ( float ) glfwGetTime() );
@@ -66,10 +66,10 @@ public class Engine {
             win.keys[ GLFW_KEY_SPACE ] = false;
         }
         if ( win.keys[ GLFW_KEY_Q ] ) {
-            scale *= 1.02d;
+            scale *= 1.02f;
         }
         if ( win.keys[ GLFW_KEY_E ] ) {
-            scale *= 0.98d;
+            scale *= 0.98f;
         }
 
         if ( win.keys[ GLFW_KEY_W ] ) {
@@ -87,9 +87,9 @@ public class Engine {
     }
 
     private void reset() {
-        scale = 1d;
-        offsetY = 0d;
-        offsetX = 0d;
+        scale = 1f;
+        offsetY = 0f;
+        offsetX = 0f;
         prevOffsetY = offsetY;
         prevOffsetX = offsetX;
         shader.set( "scale", scale );
