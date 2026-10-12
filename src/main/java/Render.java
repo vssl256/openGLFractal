@@ -20,18 +20,18 @@ public class Render {
                 -1.0f,  1.0f,   0.0f
         }, shader );
         System.out.println( "Setting width to " + win.width );
-        shader.set1i( "width", win.width );
-        shader.set1i( "height", win.height );
-        shader.set1f( "scale", 1f );
-        shader.set1f( "offsetX", 0f );
-        shader.set1f( "offsetY", 0f );
+        shader.set( "width", win.width );
+        shader.set( "height", win.height );
+        shader.set( "scale", 1d );
+        shader.set( "offsetX", 0d );
+        shader.set( "offsetY", 0d );
     }
 
     public void render() {
         win.clear();
         if ( win.isResized ) {
-            shader.set1i( "width", win.width );
-            shader.set1i( "height", win.height );
+            shader.set( "width", win.width );
+            shader.set( "height", win.height );
             win.isResized = false;
         }
         mesh.draw();

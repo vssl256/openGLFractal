@@ -1,58 +1,55 @@
-#version 400
+#version 410 core
+
+#extension GL_ARB_gpu_shader_fp64 : enable
 
 out vec4 FragColor;
 in vec3 outColor;
 uniform int width, height;
-uniform float scale;
-uniform float offsetX, offsetY;
-float aspectRatio = float( width ) / float( height );
-float size = 10 * scale;
-float localWidthMin = -size * aspectRatio + offsetX, localWidthMax = size * aspectRatio + offsetX;
-float localHeightMin = -size + offsetY, localHeightMax = size + offsetY;
-float oneOverThree = 1.0 / 3.0;
+uniform double scale;
+uniform double offsetX, offsetY;
+double aspectRatio = double( width ) / double( height );
+double size = scale;
+double localWidthMin = -size * aspectRatio + offsetX, localWidthMax = size * aspectRatio + offsetX;
+double localHeightMin = -size + offsetY, localHeightMax = size + offsetY;
 
-float pi = 3.14159;
+float maxIter = 150.0;
+float colorScale = maxIter / 255.0;
 
-float remap( float x, float x1, float x2, float y1, float y2 ) {
+double remap( double x, double x1, double x2, double y1, double y2 ) {
     return y1 + ( ( x - x1 ) * ( y2 -y1 ) ) / ( x2 - x1 );
 }
 
-vec2 toLocal( vec2 global ) {
-    return vec2(
+dvec2 toLocal( vec2 global ) {
+    return dvec2(
             remap( global.x, 0, width, localWidthMin, localWidthMax ),
             remap( global.y, 0, height, localHeightMin, localHeightMax )
     );
 }
 
 void main() {
-    vec2 pixels = toLocal( gl_FragCoord.xy );
-    float x = pixels.x;
-    float y = pixels.y;
-    float axisThreshold = 0.01;
-    float threshold = 0.1;
+    dvec2 pixels = toLocal( gl_FragCoord.xy );
+    double x = pixels.x;
+    double y = pixels.y;
 
+    float zx = 0.0f, zy = 0.0f;
+    float x2, y2;
 
-    float graph1 = abs( sin( x ) - y  );
-    float graph2 = abs( cos( x ) - y ) ;
+    int i = 0;
 
-    vec3 color = vec3( 0.0, 0.5, 0.5 );
-    if ( abs(x) <= axisThreshold * scale * 2.5 || abs(y) <= axisThreshold * scale * 2.5 ) {
-        color.rgb = vec3( 1.0, 1.0, 1.0 );
-    }
+    while ( i < maxIter ) {
+        x2 = zx * zx;
+        y2 = zy * zy;
 
-    if ( graph1 <= threshold + scale * 0.15 ) {
-        color.rgb = vec3( 1.0, 1.0, 1.0 );
-    }
-    if ( graph1 <= threshold + scale * 0.1 ) {
-        color.rgb = vec3( 0.0, 0.0, 1.0 );
-    }
+        if ( x2 + y2 > 4.0 ) break;
 
-    if ( graph2 <= threshold + scale * 0.15 ) {
-        color.rgb = vec3( 1.0, 1.0, 1.0 );
+        float yNew = fma( 2.0f * zx, zy, float( y ) );
+        zx = fma( -zy, zy, x2 + float( x ) );
+        zy = yNew;
+        i++;
     }
-    if ( graph2 <= threshold + scale * 0.1 ) {
-        color.rgb = vec3( 0.4, 1.0, 0.0 );
-    }
-    FragColor = vec4( color.r, color.g, color.b, 1.0f );
+    float color = 0;
+    if ( i < maxIter ) color = float( remap( i / colorScale, 0, 255, 0, 1 ) );
+
+    FragColor = vec4( color, 0, color, 1.0f );
 }
 

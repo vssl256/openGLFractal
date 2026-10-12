@@ -35,26 +35,26 @@ public class Engine {
     }
 
 
-    private float scale = 1f;
-    private float offsetX = 0f, offsetY = 0f;
-    private float prevOffsetX = offsetX, prevOffsetY = offsetY;
-    private float prevScale = scale;
+    private double scale = 1d;
+    private double offsetX = 0d, offsetY = 0d;
+    private double prevOffsetX = offsetX, prevOffsetY = offsetY;
+    private double prevScale = scale;
     private boolean playback = true;
     private void controlsHandler() {
         //if ( playback ) shader.set1f( "time", ( float ) glfwGetTime() );
         if ( prevScale != scale ) {
             prevScale = scale;
-            shader.set1f( "scale", scale );
+            shader.set( "scale", scale );
         }
         if ( prevOffsetX != offsetX || prevOffsetY != offsetY ) {
             prevOffsetX = offsetX;
             prevOffsetY = offsetY;
-            shader.set1f( "offsetX", offsetX );
-            shader.set1f( "offsetY", offsetY );
+            shader.set( "offsetX", offsetX );
+            shader.set( "offsetY", offsetY );
         }
     }
 
-    private static final float SPEED = 0.1f;
+    private static final double SPEED = 0.03d;
     private void inputHandler() {
         if ( win.keys[ GLFW_KEY_R ] ) {
             reset();
@@ -66,34 +66,34 @@ public class Engine {
             win.keys[ GLFW_KEY_SPACE ] = false;
         }
         if ( win.keys[ GLFW_KEY_Q ] ) {
-            scale *= 1.02f;
+            scale *= 1.02d;
         }
         if ( win.keys[ GLFW_KEY_E ] ) {
-            scale *= 0.98f;
+            scale *= 0.98d;
         }
 
         if ( win.keys[ GLFW_KEY_W ] ) {
-            offsetY += SPEED;
+            offsetY += SPEED * scale;
         }
         if ( win.keys[ GLFW_KEY_S ] ) {
-            offsetY -= SPEED;
+            offsetY -= SPEED * scale;
         }
         if ( win.keys[ GLFW_KEY_D ] ) {
-            offsetX += SPEED;
+            offsetX += SPEED * scale;
         }
         if ( win.keys[ GLFW_KEY_A ] ) {
-            offsetX -= SPEED;
+            offsetX -= SPEED * scale;
         }
     }
 
     private void reset() {
-        scale = 1f;
-        offsetY = 0f;
-        offsetX = 0f;
+        scale = 1d;
+        offsetY = 0d;
+        offsetX = 0d;
         prevOffsetY = offsetY;
         prevOffsetX = offsetX;
-        shader.set1f( "scale", scale );
-        shader.set1f( "offsetX", offsetX );
-        shader.set1f( "offsetY", offsetY );
+        shader.set( "scale", scale );
+        shader.set( "offsetX", offsetX );
+        shader.set( "offsetY", offsetY );
     }
 }

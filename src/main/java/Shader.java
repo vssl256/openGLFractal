@@ -3,7 +3,7 @@ import utils.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.lwjgl.opengl.GL20C.*;
+import static org.lwjgl.opengl.GL40C.*;
 import static utils.FileTypes.SHADER;
 
 public class Shader {
@@ -25,6 +25,33 @@ public class Shader {
 
         id = compile();
         glUseProgram( id );
+    }
+
+    public void set( String name, Object value ) {
+        if ( value instanceof Integer ) {
+            set1i( name, ( int ) value );
+            return;
+        }
+        if ( value instanceof Float ) {
+            set1f( name, ( float ) value );
+            return;
+        }
+        if ( value instanceof Double ) {
+            set1d( name, ( double ) value );
+            return;
+        }
+        System.err.println( "Couldn't find Object type " + value.getClass().getName() );
+    }
+
+    public void set1d( String name, double value ) {
+        glUseProgram( id );
+        if ( !uLocations.containsKey( name ) ) {
+            createUniform( name );
+            uniforms.put( name, value );
+        }
+        uniforms.replace( name, value );
+        setUniform1d( name, value );
+        glUseProgram( 0 );
     }
 
     public void set1f( String name, float value ) {
@@ -57,6 +84,14 @@ public class Shader {
             return;
         }
         uLocations.put( name, uLocation );
+    }
+
+    private void setUniform1d( String name, double value ) {
+        Integer uLocation = uLocations.get( name );
+        if ( uLocation == null ) {
+            return;
+        }
+        glUniform1d( uLocation, value );
     }
 
     private void setUniform1f( String name, float value ) {
@@ -94,12 +129,7 @@ public class Shader {
         for ( Map.Entry<String, Object> entry : uniforms.entrySet() ) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            if ( value instanceof Integer ) {
-                set1i( key, ( int ) value );
-            }
-            if ( value instanceof Float ) {
-                set1f( key, ( float ) value );
-            }
+            set( key, value );
         }
     }
 
