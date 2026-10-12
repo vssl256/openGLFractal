@@ -21,7 +21,7 @@ public class Mesh {
             1, 2, 3
     };
 
-    public Mesh( float[] vertices, String name, Shader shader ) {
+    public Mesh( float[] vertices, Shader shader ) {
         this.shader = shader;
 
         verticesBuffer = MemoryUtil.memCallocFloat( vertices.length );

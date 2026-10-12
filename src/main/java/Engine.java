@@ -41,7 +41,7 @@ public class Engine {
     private float prevScale = scale;
     private boolean playback = true;
     private void controlsHandler() {
-        if ( playback ) shader.set1f( "time", ( float ) glfwGetTime() );
+        //if ( playback ) shader.set1f( "time", ( float ) glfwGetTime() );
         if ( prevScale != scale ) {
             prevScale = scale;
             shader.set1f( "scale", scale );

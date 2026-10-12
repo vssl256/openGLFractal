@@ -18,7 +18,7 @@ public class Render {
                 1.0f,   -1.0f,  0.0f,
                 -1.0f,  -1.0f,  0.0f,
                 -1.0f,  1.0f,   0.0f
-        }, "test", shader );
+        }, shader );
         System.out.println( "Setting width to " + win.width );
         shader.set1i( "width", win.width );
         shader.set1i( "height", win.height );
