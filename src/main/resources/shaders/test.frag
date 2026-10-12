@@ -15,21 +15,21 @@ double localHeightMin = -size + offsetY, localHeightMax = size + offsetY;
 float maxIter = 150.0;
 float colorScale = maxIter / 255.0;
 
-double remap( double x, double x1, double x2, double y1, double y2 ) {
+float remap( float x, float x1, float x2, float y1, float y2 ) {
     return y1 + ( ( x - x1 ) * ( y2 -y1 ) ) / ( x2 - x1 );
 }
 
-dvec2 toLocal( vec2 global ) {
-    return dvec2(
-            remap( global.x, 0, width, localWidthMin, localWidthMax ),
-            remap( global.y, 0, height, localHeightMin, localHeightMax )
+vec2 toLocal( vec2 global ) {
+    return vec2(
+            remap( global.x, 0, width, float( localWidthMin ), float( localWidthMax ) ),
+            remap( global.y, 0, height, float( localHeightMin ), float( localHeightMax ) )
     );
 }
 
 void main() {
-    dvec2 pixels = toLocal( gl_FragCoord.xy );
-    double x = pixels.x;
-    double y = pixels.y;
+    vec2 pixels = toLocal( gl_FragCoord.xy );
+    float x = pixels.x;
+    float y = pixels.y;
 
     float zx = 0.0f, zy = 0.0f;
     float x2, y2;
@@ -48,7 +48,7 @@ void main() {
         i++;
     }
     float color = 0;
-    if ( i < maxIter ) color = float( remap( i / colorScale, 0, 255, 0, 1 ) );
+    if ( i < maxIter ) color = remap( i / colorScale, 0, 255, 0, 1 );
 
     FragColor = vec4( color, 0, color, 1.0f );
 }
