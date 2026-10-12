@@ -11,7 +11,7 @@ public class Engine {
 
     public Engine( Window win ) {
         this.win = win;
-        shader = new Shader( "test" );
+        shader = new Shader( "graph" );
         render = new Render( win, shader );
         time = new Time();
     }
@@ -41,7 +41,7 @@ public class Engine {
     private float prevScale = scale;
     private boolean playback = true;
     private void controlsHandler() {
-        //if ( playback ) shader.set1f( "time", ( float ) glfwGetTime() );
+        if ( playback ) shader.set1f( "time", ( float ) glfwGetTime() );
         if ( prevScale != scale ) {
             prevScale = scale;
             shader.set( "scale", scale );
@@ -54,7 +54,7 @@ public class Engine {
         }
     }
 
-    private static final double SPEED = 0.03d;
+    private static final float SPEED = 0.03f;
     private void inputHandler() {
         if ( win.keys[ GLFW_KEY_R ] ) {
             reset();

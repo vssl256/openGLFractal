@@ -34,7 +34,7 @@ void main() {
 
 
     float graph1 = abs( pow( sqrt( x * x ), oneOverThree ) + 0.9 * sin( 20 * x + time * 10 ) * sqrt( 3.3 - x*x ) - y  );
-    float graph2 = abs( cos( x ) - y ) ;
+    float graph2 = abs( 2 / pi * asin( sin( pi * x ) ) - y ) ;
 
     vec3 color = vec3( 0.0, 0.5, 0.5 );
     if ( abs(x) <= axisThreshold * scale * 2.5 || abs(y) <= axisThreshold * scale * 2.5 ) {

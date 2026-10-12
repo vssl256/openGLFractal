@@ -1,5 +1,6 @@
 import utils.File;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +41,22 @@ public class Shader {
             set1d( name, ( double ) value );
             return;
         }
+        if ( value instanceof float[] ) {
+            set2f( name, ( float[] ) value );
+            return;
+        }
         System.err.println( "Couldn't find Object type " + value.getClass().getName() );
+    }
+
+    public void set2f( String name, float[] value ) {
+        glUseProgram( id );
+        if ( !uLocations.containsKey( name ) ) {
+            createUniform( name );
+            uniforms.put( name, value );
+        }
+        uniforms.replace( name, value );
+        setUniform2f( name, value );
+        glUseProgram( 0 );
     }
 
     public void set1d( String name, double value ) {
@@ -84,6 +100,14 @@ public class Shader {
             return;
         }
         uLocations.put( name, uLocation );
+    }
+
+    private void setUniform2f( String name, float[] value ) {
+        Integer uLocation = uLocations.get( name );
+        if ( uLocations == null ) {
+            return;
+        }
+        glUniform2fv( uLocation, value );
     }
 
     private void setUniform1d( String name, double value ) {
