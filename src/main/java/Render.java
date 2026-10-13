@@ -1,8 +1,4 @@
-import org.lwjgl.opengl.GL11C;
-
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11C.GL_FILL;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
+import org.joml.Vector2f;
 
 public class Render {
 
@@ -22,9 +18,9 @@ public class Render {
         System.out.println( "Setting width to " + win.width );
         shader.set( "width", win.width );
         shader.set( "height", win.height );
-        shader.set( "scale", 1f );
-        shader.set( "offsetX", 0f );
-        shader.set( "offsetY", 0f );
+        shader.set( "scale", new Vector2f( 1.0f, 0.0f ) );
+        shader.set( "offsetX", new Vector2f( 0.0f ) );
+        shader.set( "offsetY", new Vector2f( 0.0f ) );
     }
 
     public void render() {

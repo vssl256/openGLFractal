@@ -7,11 +7,11 @@ public class Test {
         Vector2f dsA = toDoubleSingle( a );
         Vector2f dsB = toDoubleSingle( b );
 
-        double f64 = a - b;
-        float f32 = ( float ) a - ( float ) b;
-        Vector2f doubleSingle = sub( dsA, dsB );
+        double f64 = a + b;
+        float f32 = ( float ) a + ( float ) b;
+        Vector2f doubleSingle = sum( dsA, dsB );
 
-        IO.println( a + " - " + b );
+        IO.println( a + " + " + b );
         IO.println( "f64: " + f64 );
         IO.println( "f32: " + ( f32 - f64 ) );
         IO.println( "ds: " + ( ( double ) doubleSingle.x + doubleSingle.y - f64 ) );
@@ -25,15 +25,10 @@ public class Test {
     }
 
     Vector2f prod( Vector2f a, Vector2f b ) {
-        float highA = a.x;
-        float highB = b.x;
-        float lowA = a.y;
-        float lowB = b.y;
-
-        float high = highA * highB;
-        double low = ( double ) highA * highB - high;
-        low += ( double ) highA * lowB;
-        low += ( double ) highB * lowA;
+        float high = a.x * b.x;
+        double low = ( double ) a.x * b.x - high;
+        low += ( double ) a.x * b.y;
+        low += ( double ) b.x * a.y;
 
         return sum( high, ( float ) low );
     }
@@ -45,13 +40,8 @@ public class Test {
     }
 
     Vector2f sub( Vector2f a, Vector2f b ) {
-        float highA = a.x;
-        float highB = b.x;
-        float lowA = a.y;
-        float lowB = b.y;
-
-        Vector2f highSum = sum( highA, -highB );
-        Vector2f lowSum = sum( lowA, -lowB );
+        Vector2f highSum = sum(a.x, -b.x);
+        Vector2f lowSum = sum(a.y, -b.y);
 
         Vector2f correctionSum = sum( highSum.y, lowSum.x );
         Vector2f result = sum( highSum.x, correctionSum.x );
@@ -61,13 +51,8 @@ public class Test {
     }
 
     Vector2f sum( Vector2f a, Vector2f b ) {
-        float highA = a.x;
-        float highB = b.x;
-        float lowA = a.y;
-        float lowB = b.y;
-
-        Vector2f highSum = sum( highA, highB );
-        Vector2f lowSum = sum( lowA, lowB );
+        Vector2f highSum = sum(a.x, b.x);
+        Vector2f lowSum = sum(a.y, b.y);
 
         Vector2f correctionSum = sum( highSum.y, lowSum.x );
         Vector2f result = sum( highSum.x, correctionSum.x );

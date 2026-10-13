@@ -1,5 +1,8 @@
+import org.joml.Vector2f;
+import org.lwjgl.system.MemoryStack;
 import utils.File;
 
+import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +48,22 @@ public class Shader {
             set2f( name, ( float[] ) value );
             return;
         }
+        if ( value instanceof Vector2f ) {
+            set2fv( name, ( Vector2f ) value );
+            return;
+        }
         System.err.println( "Couldn't find Object type " + value.getClass().getName() );
+    }
+
+    public void set2fv( String name, Vector2f vector ) {
+        glUseProgram( id );
+        if ( !uLocations.containsKey( name ) ) {
+            createUniform( name );
+            uniforms.put( name, vector );
+        }
+        uniforms.replace( name, vector );
+        setUniform2fv( name, vector );
+        glUseProgram( 0 );
     }
 
     public void set2f( String name, float[] value ) {
@@ -100,6 +118,17 @@ public class Shader {
             return;
         }
         uLocations.put( name, uLocation );
+    }
+
+    private void setUniform2fv( String name, Vector2f vector ) {
+        Integer uLocation = uLocations.get( name );
+        if ( uLocation == null ) {
+            return;
+        }
+        try ( MemoryStack stack = MemoryStack.stackPush() ) {
+            FloatBuffer buffer = stack.mallocFloat( 2 );
+            glUniform2fv( uLocation, vector.get( buffer ) );
+        }
     }
 
     private void setUniform2f( String name, float[] value ) {

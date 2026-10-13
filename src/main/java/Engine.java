@@ -1,3 +1,4 @@
+import org.joml.Vector2f;
 import utils.Time;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -11,7 +12,7 @@ public class Engine {
 
     public Engine( Window win ) {
         this.win = win;
-        shader = new Shader( "fractal" );
+        shader = new Shader( "test" );
         render = new Render( win, shader );
         time = new Time();
     }
@@ -35,26 +36,26 @@ public class Engine {
     }
 
 
-    private float scale = 1f;
-    private float offsetX = 0f, offsetY = 0f;
-    private float prevOffsetX = offsetX, prevOffsetY = offsetY;
-    private float prevScale = scale;
+    private double scale = 1d;
+    private double offsetX = 0d, offsetY = 0d;
+    private double prevOffsetX = offsetX, prevOffsetY = offsetY;
+    private double prevScale = scale;
     private boolean playback = true;
     private void controlsHandler() {
         //if ( playback ) shader.set1f( "time", ( float ) glfwGetTime() );
         if ( prevScale != scale ) {
             prevScale = scale;
-            shader.set( "scale", scale );
+            shader.set( "scale", toDoubleSingle( scale ) );
         }
         if ( prevOffsetX != offsetX || prevOffsetY != offsetY ) {
             prevOffsetX = offsetX;
             prevOffsetY = offsetY;
-            shader.set( "offsetX", offsetX );
-            shader.set( "offsetY", offsetY );
+            shader.set( "offsetX", toDoubleSingle( offsetX ) );
+            shader.set( "offsetY", toDoubleSingle( offsetY ) );
         }
     }
 
-    private static final float SPEED = 0.03f;
+    private static final double SPEED = 0.03d;
     private void inputHandler() {
         if ( win.keys[ GLFW_KEY_R ] ) {
             reset();
@@ -66,10 +67,10 @@ public class Engine {
             win.keys[ GLFW_KEY_SPACE ] = false;
         }
         if ( win.keys[ GLFW_KEY_Q ] ) {
-            scale *= 1.02f;
+            scale *= 1.02d;
         }
         if ( win.keys[ GLFW_KEY_E ] ) {
-            scale *= 0.98f;
+            scale *= 0.98d;
         }
 
         if ( win.keys[ GLFW_KEY_W ] ) {
@@ -87,13 +88,20 @@ public class Engine {
     }
 
     private void reset() {
-        scale = 0.000003f;
-        offsetY = 0.131825940205312f;
-        offsetX = -0.7436438870371587f;
+        scale = 0.000003d;
+        offsetY = 0.131825940205312d;
+        offsetX = -0.7436438870371587d;
         prevOffsetY = offsetY;
         prevOffsetX = offsetX;
-        shader.set( "scale", scale );
-        shader.set( "offsetX", offsetX );
-        shader.set( "offsetY", offsetY );
+        prevScale = scale;
+        shader.set( "scale", toDoubleSingle( scale ) );
+        shader.set( "offsetX", toDoubleSingle( offsetX ) );
+        shader.set( "offsetY", toDoubleSingle( offsetY ) );
+    }
+
+    private Vector2f toDoubleSingle( double value ) {
+        float high = ( float ) value;
+        float low = ( float ) ( value - ( double ) high );
+        return new Vector2f( high, low );
     }
 }
