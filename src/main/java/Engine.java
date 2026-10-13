@@ -11,7 +11,7 @@ public class Engine {
 
     public Engine( Window win ) {
         this.win = win;
-        shader = new Shader( "graph" );
+        shader = new Shader( "fractal" );
         render = new Render( win, shader );
         time = new Time();
     }
@@ -41,7 +41,7 @@ public class Engine {
     private float prevScale = scale;
     private boolean playback = true;
     private void controlsHandler() {
-        if ( playback ) shader.set1f( "time", ( float ) glfwGetTime() );
+        //if ( playback ) shader.set1f( "time", ( float ) glfwGetTime() );
         if ( prevScale != scale ) {
             prevScale = scale;
             shader.set( "scale", scale );
@@ -87,9 +87,9 @@ public class Engine {
     }
 
     private void reset() {
-        scale = 1f;
-        offsetY = 0f;
-        offsetX = 0f;
+        scale = 0.000003f;
+        offsetY = 0.131825940205312f;
+        offsetX = -0.7436438870371587f;
         prevOffsetY = offsetY;
         prevOffsetX = offsetX;
         shader.set( "scale", scale );

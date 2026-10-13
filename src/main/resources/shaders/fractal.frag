@@ -15,7 +15,7 @@ float size = scale;
 float localWidthMin = -size * aspectRatio + offsetX, localWidthMax = size * aspectRatio + offsetX;
 float localHeightMin = -size + offsetY, localHeightMax = size + offsetY;
 
-int maxIter = int( 2000 * abs( tan( time ) ) );
+int maxIter = 1000;
 float colorScale = float( maxIter );
 
 float remap( float x, float x1, float x2, float y1, float y2 ) {
@@ -49,7 +49,8 @@ void main() {
         zy = yNew;
         i++;
     }
-    float color = 1.0;
+
+    float color = 0.0;
     if ( i < maxIter ) color = float( i ) / colorScale;
 
     FragColor = vec4( color * 2, color / 2, color, 1.0f );
