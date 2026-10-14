@@ -11,7 +11,7 @@ uniform vec2 offsetX, offsetY;
 
 float aspectRatio = float( width ) / float( height );
 
-int maxIter = 2000;
+int maxIter = 800;
 float colorScale = maxIter / 255.0;
 
 vec2 sum( float a, float b ) {
@@ -34,7 +34,7 @@ vec2 sum( vec2 a, vec2 b ) {
     vec2 result = sum( highSum.x, correctionSum.x );
     float correction = lowSum.y + correctionSum.y + result.y;
 
-    return sum( result.x, correction );
+    return vec2( result.x, correction );
 }
 
 vec2 sub( vec2 a, vec2 b ) {
@@ -45,17 +45,16 @@ vec2 sub( vec2 a, vec2 b ) {
     vec2 result = sum( highSum.x, correctionSum.x );
     float correction = lowSum.y + correctionSum.y + result.y;
 
-    return sum( result.x, correction );
+    return vec2( result.x, correction );
 }
 
 vec2 mul( vec2 a, vec2 b ) {
     float high = a.x * b.x;
     precise float low = fma( a.x, b.x, -high );
     low = fma( a.x, b.y, low );
-    low = fma( a.y, b.x, low );
-    low = fma( a.y, b.y, low );
+    low = fma( b.x, a.y, low );
 
-    return sum( high, low );
+    return vec2( high, low );
 }
 
 float screenX = ( 2.0 * gl_FragCoord.x / float( width ) - 1.0 ) * aspectRatio;
@@ -71,7 +70,7 @@ float remap( float x, float x1, float x2, float y1, float y2 ) {
 void main() {
     vec2 zx = vec2( 0.0f );
     vec2 zy = vec2( 0.0f );
-    vec2 x2, y2;
+    vec2 x2 = vec2( 0.0 ), y2 = vec2( 0.0 );
 
     int i = 0;
     while ( i < maxIter ) {
@@ -80,8 +79,10 @@ void main() {
 
         if ( x2.x + y2.x > 4.0 ) break;
 
-        vec2 yNew = sum( mul( mul( vec2( 2.0f, 0.0f ), zx ), zy ), y );
-        zx = sum( mul( -zy, zy ), sum( x2, x ) );
+        vec2 twoZx = vec2( zx.x * 2.0, zx.y * 2.0 );
+
+        vec2 yNew = sum( mul( twoZx, zy ), y );
+        zx = sum( -y2, sum( x2, x ) );
         zy = yNew;
         i++;
     }

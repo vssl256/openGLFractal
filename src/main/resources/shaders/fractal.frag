@@ -15,7 +15,7 @@ float size = scale;
 float localWidthMin = -size * aspectRatio + offsetX, localWidthMax = size * aspectRatio + offsetX;
 float localHeightMin = -size + offsetY, localHeightMax = size + offsetY;
 
-int maxIter = 1000;
+int maxIter = 500;
 float colorScale = float( maxIter );
 
 float remap( float x, float x1, float x2, float y1, float y2 ) {
