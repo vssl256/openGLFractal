@@ -12,7 +12,7 @@ uniform vec2 offsetX, offsetY;
 float aspectRatio = float( width ) / float( height );
 
 int maxIter = 800;
-float colorScale = maxIter / 255.0;
+float colorScale = maxIter / 1.0;
 
 vec2 sum( float a, float b ) {
     if ( abs( a ) < abs( b ) ) {
@@ -63,10 +63,6 @@ float screenY = ( 2.0 * gl_FragCoord.y / float( height ) - 1.0 );
 vec2 x = sum( offsetX, mul( scale, vec2( screenX, 0.0 ) ) );
 vec2 y = sum( offsetY, mul( scale, vec2( screenY, 0.0 ) ) );
 
-float remap( float x, float x1, float x2, float y1, float y2 ) {
-    return y1 + ( ( x - x1 ) * ( y2 -y1 ) ) / ( x2 - x1 );
-}
-
 void main() {
     vec2 zx = vec2( 0.0f );
     vec2 zy = vec2( 0.0f );
@@ -87,7 +83,7 @@ void main() {
         i++;
     }
     float color = 0;
-    if ( i < maxIter ) color = remap( i / colorScale, 0, 255, 0, 1 );
+    if ( i < maxIter ) color = i / colorScale;
 
     FragColor = vec4( color * 2, color / 2, color, 1.0f );
 }
